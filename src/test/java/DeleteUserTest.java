@@ -10,18 +10,16 @@ import java.util.Properties;
 import static io.restassured.RestAssured.given;
 
 
-public class DeleteUserTest {
-    Properties prop = new Properties();
-    String baseUrl = prop.getProperty("baseUrl");
+public class DeleteUserTest extends TestBase {
     @Test
     public void deleteUsersTest() {
-        RestAssured.baseURI = baseUrl;
+
         List<String> userIds = Arrays.asList("place", "user", "ID's", "Here");  // Place user ID's here
         for (String userId : userIds) {
             given()
                     .contentType(ContentType.JSON)
                     .when()
-                    .delete("/api/automationTask/deleteOne/" + userId)
+                    .delete(Properties.DELETE_ONE_PATH.getValue() + userId)
                     .then()
                     .statusCode(200);
         }

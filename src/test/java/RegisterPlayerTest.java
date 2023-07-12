@@ -4,12 +4,10 @@ import org.junit.Test;
 import java.util.Properties;
 import static io.restassured.RestAssured.given;
 
-public class RegisterPlayerTest {
-    Properties prop = new Properties();
-    String baseUrl = prop.getProperty("baseUrl");
+public class RegisterPlayerTest extends TestBase {
+
     @Test
     public void registerPlayersTest() {
-        RestAssured.baseURI = baseUrl;
         for (int i = 0; i < 12; i++) {
             String playerEmail = "player" + i + "@mail.com";
             String playerName = "player" + i;
@@ -29,7 +27,7 @@ public class RegisterPlayerTest {
                     .contentType(ContentType.JSON)
                     .body(requestBody)
                     .when()
-                    .post("/api/automationTask/create")
+                    .post(Properties.REGISTER_PLAYER_PATH.getValue())
                     .then()
                     .statusCode(201);
         }

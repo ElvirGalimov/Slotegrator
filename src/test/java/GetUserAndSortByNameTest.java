@@ -1,6 +1,7 @@
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
@@ -10,28 +11,30 @@ import static io.restassured.RestAssured.given;
 
 import java.util.Properties;
 
-public class GetUserAndSortByNameTest {
-    Properties prop = new Properties();
-    String baseUrl = prop.getProperty("baseUrl");
+public class GetUserAndSortByNameTest extends TestBase {
 
-   @Test
-   public void getUserAndSortByName(){
-       RestAssured.baseURI = baseUrl;
-       Response response = given()
-               .contentType(ContentType.JSON)
-               .when()
-               .get("/api/automationTask/getAll")
-               .then()
-               .statusCode(200)
-               .extract()
-               .response();
+    @Test
+    public void getUserAndSortByName() {
 
-       List<Map<String, ?>> users = response.jsonPath().getList("");
-       users.sort(Comparator.comparing(user -> (String) user.get("name")));
-       for (Map<String, ?> user : users) {
-           System.out.println(user.get("name"));
-       }
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .when()
+                .get(Properties.GET_USER_NAME_PATH.getValue())
+                .then()
+                .statusCode(200)
+                .extract()
+                .response();
 
+        List<Map<String, ?>> users = response.jsonPath().getList("");
+        users.sort(Comparator.comparing(user -> (String) user.get("name")));
 
-   }
+        String lastName = "";
+        for (Map<String, ?> user : users) {
+            String name = (String) user.get("name");
+            System.out.println(name);
+
+            Assert.assertTrue(name.compareTo(lastName) >= 0);
+            lastName = name;
+        }
+    }
 }

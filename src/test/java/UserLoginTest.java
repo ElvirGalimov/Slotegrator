@@ -4,22 +4,30 @@ import io.restassured.response.Response;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import static io.restassured.RestAssured.given;
 
 
-public class UserLoginTest {
-    Properties prop = new Properties();
-    String baseUrl = prop.getProperty("baseUrl");
+public class UserLoginTest extends TestBase {
+
     @Test
     public void userLoginTest() {
-        RestAssured.baseURI = baseUrl;
-        String requestBody = "{ \"email\": \"string\", \"password\": \"string\" }";
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("currency_code", "string");
+        requestBody.put("email", "string");
+        requestBody.put("name", "string");
+        requestBody.put("password_change", "string");
+        requestBody.put("password_repeat", "string");
+        requestBody.put("surname", "string");
+        requestBody.put("username", "string");
+
         Response response = given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .when()
-                .post("/api/tester/login")
+                .post(Properties.LOGIN_PATH.getValue())
                 .then()
                 .statusCode(200)
                 .body("token", notNullValue())
